@@ -6,10 +6,10 @@ resilience4j:
         slidingWindowType: COUNT_BASED
         failureRateThreshold: 50
         slidingWindowSize: 10
-        minimumNumberOfCalls: 2
+        minimumNumberOfCalls: 3
         slowCallDurationThreshold: 30000
         slowCallRateThreshold: 100
-        waitDurationInOpenState: 120000ms
+        waitDurationInOpenState: 60000ms
         permittedNumberOfCallsInHalfOpenState: 2
   bulkhead:
     instances:
