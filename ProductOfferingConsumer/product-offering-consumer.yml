@@ -9,8 +9,8 @@ resilience4j:
         minimumNumberOfCalls: 4
         slowCallDurationThreshold: 30000
         slowCallRateThreshold: 100
-        waitDurationInOpenState: 60000ms
-        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 120000ms
+        permittedNumberOfCallsInHalfOpenState: 2
   bulkhead:
     instances:
         productOfferingConsumerCommandKey:
