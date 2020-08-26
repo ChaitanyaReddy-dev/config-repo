@@ -14,7 +14,7 @@ productOffering:
 kafka:
   nack:
     sleep:
-      time: 30000
+      time: 40000
     
 retry:
   max-attempts: 3
