@@ -1,0 +1,73 @@
+server:
+  port: 8087
+  
+spring.kafka.bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:http://localhost:9092}
+  
+management:
+  endpoints:
+    web.exposure.include:  refresh, info, health, loggers, bus-refresh, prometheus, heapdump, threaddump
+  endpoint:
+    health.show-details: always
+    info.git.mode: full
+  metrics:
+    distribution:
+      percentiles-histogram:
+        resilience4j:
+          circuitbreaker:
+            calls: true
+    enable:
+      jvm: true
+      kafka: true
+      zipkin: true  
+       
+    
+kafka.nack.sleep.time: 40000
+      
+client:
+    soap-action: document/http://siebel.com/asi/V0:SWIProductImportUpsert
+    default-uri: https://localhost:8082/SWIProductImportUpsert
+    timeout: 30000
+    
+retry:
+  max-attempts: 3
+  backoff-delay: 1000
+  backoff-multiplier: 1
+  
+resilience4j:
+  circuitbreaker:
+    instances:
+      productOfferingConsumerCommandKey:
+        slidingWindowType: COUNT_BASED
+        failureRateThreshold: 50
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 4
+        slowCallDurationThreshold: 40000
+        slowCallRateThreshold: 100
+        waitDurationInOpenState: 70000
+        permittedNumberOfCallsInHalfOpenState: 3
+  bulkhead:
+    instances:
+        productOfferingConsumerCommandKey:
+          maxConcurrentCalls: 1 
+  retry:
+    instances:
+      productOfferingConsumerCommandKey:
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        maxRetryAttempts: 3
+        waitDuration: 1000
+        retryExceptions: java.net.ConnectException
+        
+logger:
+  kafka:
+    topic: ProductOfferingLogs
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    retries: 2
+
+productOffering:
+  publisher:
+    topic: ProductImportResponse
+  consumer:
+    bootstrap.server.address: ${spring.kafka.bootstrap-servers}
+    groupId: productImport_id
+    topic: ProductOffer

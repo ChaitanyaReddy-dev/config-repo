@@ -1,0 +1,17 @@
+sspring:
+  security:
+    user:
+      name: admin
+      password: '{cipher}fd7ae9f7b4585ca931aba37637db2714fc32786a8d7f464d2d1fd98ef1e79319'
+      
+server:
+  port: 9999
+
+management:
+  endpoints:
+    web.exposure.include: '*'
+  endpoint:
+    health.show-details: ALWAYS  
+  info:
+    git.mode: full    
+

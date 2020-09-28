@@ -1,0 +1,49 @@
+server:
+  port: 8086
+  
+spring:
+  security:
+    user:
+      name: user
+      password: '{cipher}fd7ae9f7b4585ca931aba37637db2714fc32786a8d7f464d2d1fd98ef1e79319'
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:http://localhost:9092}
+    
+management:
+  endpoints:
+    web.exposure.include: '*'
+  endpoint:
+    health.show-details: always
+  info:
+    git.mode: full
+  metrics:
+    enable:
+      jvm: true
+      kafka: true
+      zipkin: true        
+      
+producer:
+  kafka:
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    acks: all
+    retries: 4
+    retry.backoff.ms: 10000
+    max.block.ms: 6000
+    delivery.timeout.ms: 40000
+
+publisher.topic: ProductOffer
+    
+logger:
+  kafka:
+    topic: ProductOfferingLogs
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    retries: 2    
+
+resilience4j:
+  ratelimiter:
+    instances:
+      productOfferingPublisher:
+        limitForPeriod: 5
+        limitRefreshPeriod: 180s 
+        timeoutDuration: 60s
+
